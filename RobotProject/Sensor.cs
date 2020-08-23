@@ -8,44 +8,55 @@ namespace RobotProject
 {
     public class Sensor
     {
-        public float x, y, a;
-        public float maxDist = 100;
+        private float _x, _y, _angle;
+        private float _maxDist = 100;
+
+        public float X => this._x;     
+        public float Y => this._y;
+        public float Angle => this._angle;
+        public float MaxDist => this._maxDist;
+
+        public Sensor(float x, float y, float angle)
+        {
+            this._x = x;
+            this._y = y;
+            this._angle = angle;
+        }
 
         //new
         public float measuredDist;
 
-        public float CheckDistance(World w, Robot r)
+        public float CheckDistance(World world, Robot robot)
         {
             float step = 1;
-            float s = (float)Math.Sin(a + r.a);
-            float c = (float)Math.Cos(a + r.a);
-            float x_ = x, y_ = y;           //промежуточные точки луча
+            float s = (float)Math.Sin(_angle + robot.Angle);
+            float c = (float)Math.Cos(_angle + robot.Angle);
+            float xCurrent = _x, yCurrent = _y;           //промежуточные точки луча
 
-            for (float i = 0; i < maxDist; i += step)
+            for (float i = 0; i < MaxDist; i += step)
             {
-                x_ += step * c;
-                y_ += step * s;
+                xCurrent += step * c;
+                yCurrent += step * s;
 
                 //new
-                if (CheckPoint(r.x + x_, r.y + y_, w.obstacles))
+                if (CheckPoint(robot.X + xCurrent, robot.Y + yCurrent, world.obstacles))
                 {
-                    return measuredDist = (float)Math.Sqrt(x_ * x_ + y_ * y_);
+                    return measuredDist = (float)Math.Sqrt(xCurrent * xCurrent + yCurrent * yCurrent);
                 }
             }
 
             //new
-            return measuredDist = maxDist;
+            return measuredDist = MaxDist;
         }
 
         private bool CheckPoint(float x_, float y_, List<Obstacle> obstacles)
         {
             for (int i = 0; i < obstacles.Count; i++)
             {
-                var o = obstacles[i];
-                var dx = o.x - x_;
-                var dy = o.y - y_;
+                var dx = obstacles[i].X - x_;
+                var dy = obstacles[i].Y - y_;
 
-                if ((float)Math.Sqrt(dx * dx + dy * dy) < o.d / 2)
+                if ((float)Math.Sqrt(dx * dx + dy * dy) < obstacles[i].Diameter / 2)
                     return true;
             }
             return false;

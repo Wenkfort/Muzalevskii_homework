@@ -10,82 +10,90 @@ namespace RobotProject
 {
     public class Robot
     {
-        public float x, y;  //координаты робота
-        public float w, h;  //размеры робота
-        public float a;     //угол в радианах
-        public float speed, rot_speed; //скорость движения и поворота робота
-        public float a1;    //ускорение движения робота
-        public float a2;    //ускорение поворота руля робота
-        public float a_steer;   //угол руления робота
+        private float _x;
+        private float _y;  //координаты робота
+        private float _width, _height;  //размеры робота
+        private float _angle;     //угол в радианах
+        private float _speed = 0;
+        private float _rotSpeed = 0; //скорость движения и поворота робота, [pix/s]
+        private float _acc;    //ускорение движения робота
+        private float _steeringWheelRotAcc;    //ускорение поворота руля робота
+        private float _steeringWheelAngle;   //угол руления робота
+        private const float _maxSpeed = 100;
+        private const float _maxSteeringWheelAngleAbs = 1;
 
         public List<Sensor> sensors = new List<Sensor>();   //дальномеры
 
-        public Robot()      //конструктор
+        public float Angle => _angle; 
+        public float X => _x;
+        public float Y => _y;
+        public float Speed => _speed;
+        public float Rot_speed => _rotSpeed;
+        public float SteeringWheelAngle => _steeringWheelAngle;
+        public float SteeringWheelRotAcc { get => _steeringWheelRotAcc; set => _steeringWheelRotAcc = value; }
+        public float Acc { get => _acc; set => _acc = value; }
+
+        public Robot(float x, float y, float angle, float width, float height)      //конструктор
         {
-            x = 50; y = 70;
-            w = 100; h = 70;
-            a = 1;
-            speed = 0;      //пикс в секунду
-            rot_speed = 0;  //радиан в секунду
+            _x = x;
+            _y = y;
+            _width = width;
+            _height = height;
+            _angle = angle;
 
             for (int i = -5; i <= 5; i++)
             {
-                var s = new Sensor { a = i * 0.1f, x = 0, y = 0 };
-                sensors.Add(s);
+                sensors.Add(new Sensor(0, 0, (float)i * 0.1f));
             }
         }
 
         public void Draw(Graphics g) //отрисовка
         {
             var t = g.Transform;
-            g.TranslateTransform(x, y);
-            g.RotateTransform(a * 180 / (float)Math.PI);
-            g.DrawRectangle(Pens.Black, -h / 2, -w / 2, h, w);
+            g.TranslateTransform(_x, _y);
+            g.RotateTransform(_angle * 180 / (float)Math.PI);
+            g.DrawRectangle(Pens.Black, -_height / 2, -_width / 2, _height, _width);
 
-            foreach (var s in sensors)
+            foreach (var sensor in sensors)
             {
                 g.DrawLine(Pens.Violet,
-                            s.x,
-                            s.y,
-                            s.x + s.maxDist * (float)Math.Cos(s.a),
-                            s.y + s.maxDist * (float)Math.Sin(s.a)
+                            sensor.X,
+                            sensor.Y,
+                            sensor.X + sensor.MaxDist * (float)Math.Cos(sensor.Angle),
+                            sensor.Y + sensor.MaxDist * (float)Math.Sin(sensor.Angle)
                     );
 
                 //new
                 g.DrawLine(Pens.Red,
-                            s.x,
-                            s.y,
-                            s.x + s.measuredDist * (float)Math.Cos(s.a),
-                            s.y + s.measuredDist * (float)Math.Sin(s.a)
+                            sensor.X,
+                            sensor.Y,
+                            sensor.X + sensor.measuredDist * (float)Math.Cos(sensor.Angle),
+                            sensor.Y + sensor.measuredDist * (float)Math.Sin(sensor.Angle)
                     );
             }
 
             g.Transform = t;
         }
 
-        public void Sim(float dt, World w) //симуляция
+        public void Sim(float dt, World world) //симуляция
         {
 
             //new
-            speed += a1 * dt;
-            speed = Math.Sign(speed) * Math.Max(0, Math.Min(100, Math.Abs(speed)));
+            _speed += Acc * dt;
+            _speed = Math.Sign(_speed) * Math.Max(0, Math.Min(_maxSpeed, Math.Abs(_speed)));
 
-            a_steer += a2 * dt;
-            a_steer = Math.Sign(a_steer) * Math.Max(0, Math.Min(1, Math.Abs(a_steer)));
+            _steeringWheelAngle += _steeringWheelRotAcc * dt;
+            _steeringWheelAngle = Math.Sign(_steeringWheelAngle) * Math.Max(0, Math.Min(_maxSteeringWheelAngleAbs, Math.Abs(_steeringWheelAngle)));
 
-            var _R = 2 * (float)Math.Sin(a_steer) / h;  //величина обратная радиусу окружности, по которой движется робот
-            rot_speed = speed * _R;
+            _rotSpeed = _speed * 2 * (float)Math.Sin(_steeringWheelAngle) / _height;  
 
-            float s = (float)Math.Sin(a);
-            float c = (float)Math.Cos(a);
-
-            x += speed * c * dt;
-            y += speed * s * dt;
-            a += rot_speed * dt;
+            _x += _speed * (float)Math.Cos(_angle) * dt;
+            _y += _speed * (float)Math.Sin(_angle) * dt;
+            _angle += Rot_speed * dt;
 
             //new
-            foreach (var sens in sensors)
-                sens.CheckDistance(w, this);
+            foreach (var sensor in sensors)
+                sensor.CheckDistance(world, this);
         }
 
         //new
@@ -98,20 +106,16 @@ namespace RobotProject
 
         public void MoveToGoal(float x, float y)
         {
-            var beta = a;
-            var dx = x - this.x;
-            var dy = y - this.y;
-            var gamma = (float)Math.Atan2(dy, dx);
+            var gamma = (float)Math.Atan2(y - Y, x - X);
 
-            var alpha = gamma - beta;    //угол направления на цель
-            float pi = (float)Math.PI, pi2 = 2 * pi;
-            while (alpha > pi) alpha -= pi2;
-            while (alpha < -pi) alpha += pi2;
+            var alpha = gamma - _angle;    //угол направления на цель
+            while (alpha > Math.PI) alpha -= 2 * (float)Math.PI;
+            while (alpha < -Math.PI) alpha += 2 * (float)Math.PI;
 
-            if (alpha > 0) a_steer = 1; //управление поворотом руля
-            else if (alpha < 0) a_steer = -1;
-            else a_steer = 0;
-            speed = 50;
+            if (alpha > 0) _steeringWheelAngle = _maxSteeringWheelAngleAbs; //управление поворотом руля
+            else if (alpha < 0) _steeringWheelAngle = -_maxSteeringWheelAngleAbs;
+            else _steeringWheelAngle = 0;
+            _speed = _maxSpeed / 2;
         }
     }
 }

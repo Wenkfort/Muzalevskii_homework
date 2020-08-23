@@ -46,21 +46,21 @@ namespace RobotProject
 
             time += dt;
 
-            var state = string.Format(CultureInfo.InvariantCulture, "{0} {1}", world.r.speed, world.r.rot_speed);
+            var state = string.Format(CultureInfo.InvariantCulture, "{0} {1}", world.robot.Speed, world.robot.Rot_speed);
 
             if (state != last_state) rtb_log.Text += state + "\r\n";
 
             tb_xya.Text = string.Format(CultureInfo.InvariantCulture, "{0:F0}, {1:F1}, {2:F2}",
-                                                                      world.r.x, world.r.y, world.r.a);
-            rtb_sensors.Text = world.r.ShowSensors("; ");
+                                                                      world.robot.X, world.robot.Y, world.robot.Angle);
+            rtb_sensors.Text = world.robot.ShowSensors("; ");
 
             last_state = state;
 
-            world.r.MoveToGoal(goal.X, goal.Y); //движение робота к цели
+            world.robot.MoveToGoal(goal.X, goal.Y); //движение робота к цели
 
             //запись обучающего примера в датасет
-            var sample = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\r\n", world.r.x, world.r.y, world.r.a,
-                                                                         goal.X, goal.Y, world.r.a_steer);
+            var sample = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\r\n", world.robot.X, world.robot.Y, world.robot.Angle,
+                                                                         goal.X, goal.Y, world.robot.SteeringWheelAngle);
             if (sample != last_sample)
                 rtb_dataset.Text += sample;
             last_sample = sample;
@@ -100,12 +100,12 @@ namespace RobotProject
         //new
         public void ProcessKeys()
         {
-            world.r.a1 = 0;
-            world.r.a2 = 0;
-            if (keys.Contains("w")) world.r.a1 += 100;
-            if (keys.Contains("s")) world.r.a1 -= 100;
-            if (keys.Contains("a")) world.r.a2 -= 4;
-            if (keys.Contains("d")) world.r.a2 += 4;
+            world.robot.Acc = 0;
+            world.robot.SteeringWheelRotAcc = 0;
+            if (keys.Contains("w")) world.robot.Acc += 100;
+            if (keys.Contains("s")) world.robot.Acc -= 100;
+            if (keys.Contains("a")) world.robot.Acc -= 4;
+            if (keys.Contains("d")) world.robot.Acc += 4;
         }
 
         private void Pb_DoubleClick(object sender, EventArgs e)

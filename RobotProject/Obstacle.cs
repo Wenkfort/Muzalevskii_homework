@@ -9,11 +9,24 @@ namespace RobotProject
 {
     public class Obstacle
     {
-        public float x, y; //координаты
-        public float d; //размер
+        private float _x;
+        private float _y; //координаты
+        private float _diameter; //размер
+        public float X => _x;
+        public float Y => _y;
+        public float Diameter => _diameter;
+
+        public Obstacle(float x, float y, float diameter)
+        {
+            _x = x;
+            _y = y;
+            _diameter = diameter;
+        }
+
 
         public void Draw(Graphics g) //отрисовка
-        {   g.DrawEllipse(Pens.Blue, x - d / 2, y - d / 2, d, d);
+        {   
+            g.DrawEllipse(Pens.Blue, X - Diameter / 2, Y - Diameter / 2, Diameter, Diameter);
         }
     }
 }
