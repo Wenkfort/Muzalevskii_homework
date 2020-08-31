@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Globalization;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace RobotProject
@@ -12,9 +13,10 @@ namespace RobotProject
             InitializeComponent();
         }
 
+        int MaxGoalsNumber = 10;
+        int MaxRobotNumber = 10;
         World world;
-        Graphics g;//графический контекст
-        PointF goal; //целевая точка для робота (задается щелчком мыши) 
+        Graphics g;             //графический контекст
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -22,96 +24,167 @@ namespace RobotProject
             g = Graphics.FromImage(pb.Image);
 
             world = new World();
-
-            timer1.Enabled = true;
+            init_scene();
+            world.Draw(g);  //отрисовка мира
         }
 
-        float time = 0;
+        private void init_scene()
+        {
+            RobotsTable.Rows.Add();
+            RobotsTable.Rows[0].Cells[0].Value = 50;
+            RobotsTable.Rows[0].Cells[1].Value = 50;
+            RobotsTable.Rows[0].Cells[2].Value = 0;
+            RobotsTable.Rows[1].Cells[0].Value = 50;
+            RobotsTable.Rows[1].Cells[1].Value = 150;
+            RobotsTable.Rows[1].Cells[2].Value = 0;
+
+            GoalsTable.Rows.Add();
+            GoalsTable.Rows[0].Cells[0].Value = 200;
+            GoalsTable.Rows[0].Cells[1].Value = 200;
+            GoalsTable.Rows[1].Cells[0].Value = 300;
+            GoalsTable.Rows[1].Cells[1].Value = 200;
+
+            obstaclesTable.Rows.Add();
+            obstaclesTable.Rows[0].Cells[0].Value = 150;
+            obstaclesTable.Rows[0].Cells[1].Value = 350;
+            obstaclesTable.Rows[0].Cells[2].Value = 10;
+            obstaclesTable.Rows[1].Cells[0].Value = 350;
+            obstaclesTable.Rows[1].Cells[1].Value = 150;
+            obstaclesTable.Rows[1].Cells[2].Value = 15;
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (cb_pause.Checked) return;
 
             var dt = timer1.Interval / 1000f;
-            g.Clear(Color.Yellow);
+            g.Clear(Color.White);
 
-            world.Sim(dt);  //расчет мира
-            world.Draw(g);  //отрисовка мира
-
-            g.FillEllipse(Brushes.Violet, goal.X, goal.Y, 5, 5);    //отрисовка целевой точки
+            world.Sim(dt);
+            world.Draw(g);
 
             pb.Refresh();
-
-            //пример управления
-            //world.r.rot_speed = (float)Math.Sin(5*time);
-
-            time += dt;
-
-            var state = string.Format(CultureInfo.InvariantCulture, "{0} {1}", world.robot.Speed, world.robot.Rot_speed);
-
-            if (state != last_state) rtb_log.Text += state + "\r\n";
-
-            tb_xya.Text = string.Format(CultureInfo.InvariantCulture, "{0:F0}, {1:F1}, {2:F2}",
-                                                                      world.robot.X, world.robot.Y, world.robot.Angle);
-            rtb_sensors.Text = world.robot.ShowSensors("; ");
-
-            last_state = state;
-
-            world.robot.MoveToGoal(goal.X, goal.Y); //движение робота к цели
-
-            //запись обучающего примера в датасет
-            var sample = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\r\n", world.robot.X, world.robot.Y, world.robot.Angle,
-                                                                         goal.X, goal.Y, world.robot.SteeringWheelAngle);
-            if (sample != last_sample)
-                rtb_dataset.Text += sample;
-            last_sample = sample;
         }
 
-        string last_sample = "";
-        string last_state = "";
-        string keys = "";
-
-        //new
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        private void start_simulation(object sender, EventArgs e)
         {
-            if (e.KeyCode == Keys.W) keys = TryAppend(keys, "w"); //world.r.a1 = 50;
-            if (e.KeyCode == Keys.S) keys = TryAppend(keys, "s"); //world.r.a1 = -50;
-            if (e.KeyCode == Keys.A) keys = TryAppend(keys, "a"); //world.r.a_steer = -1;
-            if (e.KeyCode == Keys.D) keys = TryAppend(keys, "d"); //world.r.a_steer = 1;
-            ProcessKeys();
+            timer1.Enabled = true;
         }
 
-        //new
-        public string TryAppend(string s, string s2)
-        {
-            if (!s.Contains(s2)) return s + s2;
-            return s;
-        }
-
-        //new
-        private void Form1_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.W) keys = keys.Replace("w", "");
-            if (e.KeyCode == Keys.S) keys = keys.Replace("s", "");
-            if (e.KeyCode == Keys.A) keys = keys.Replace("a", "");
-            if (e.KeyCode == Keys.D) keys = keys.Replace("d", "");
-            ProcessKeys();
-        }
-
-        //new
-        public void ProcessKeys()
-        {
-            world.robot.Acc = 0;
-            world.robot.SteeringWheelRotAcc = 0;
-            if (keys.Contains("w")) world.robot.Acc += 100;
-            if (keys.Contains("s")) world.robot.Acc -= 100;
-            if (keys.Contains("a")) world.robot.Acc -= 4;
-            if (keys.Contains("d")) world.robot.Acc += 4;
-        }
-
-        private void Pb_DoubleClick(object sender, EventArgs e)
+        private void SetPriorityPoint(object sender, MouseEventArgs e)
         {
             var p = ((MouseEventArgs)e).Location;
-            goal = new PointF(p.X, p.Y);
+            world.PriorityPoint = new PointF(p.X, p.Y);
+        }
+
+        private void GoalsTable_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            if (GoalsTable.Rows.Count <= MaxGoalsNumber)
+            {
+                GoalsTable.AllowUserToAddRows = true;
+            }
+            else
+            {
+                GoalsTable.AllowUserToAddRows = false;
+            }
+        }
+
+        private void RobotsTable_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            if (RobotsTable.Rows.Count <= MaxRobotNumber)
+            {
+                RobotsTable.AllowUserToAddRows = true;
+            }
+            else
+            {
+                RobotsTable.AllowUserToAddRows = false;
+            }
+        }
+
+        private void set_robots_Click(object sender, EventArgs e)
+        {
+            world.clear_robots();
+            List<int> remove_rows_with_id = new List<int>();
+            for (int i = 0; i < RobotsTable.Rows.Count; i++)
+            {
+                if (RobotsTable.Rows[i].Cells[0].Value == null || RobotsTable.Rows[i].Cells[1].Value == null || RobotsTable.Rows[i].Cells[2].Value == null)
+                    continue;
+                try
+                {
+                    float x = float.Parse(RobotsTable.Rows[i].Cells[0].Value.ToString());
+                    float y = float.Parse(RobotsTable.Rows[i].Cells[1].Value.ToString());
+                    float angle = float.Parse(RobotsTable.Rows[i].Cells[2].Value.ToString());
+                    world.add_robot(x, y, angle);
+                }
+                catch
+                {
+                    remove_rows_with_id.Add(i);
+                }
+                
+            }
+            foreach (var i in remove_rows_with_id)
+                RobotsTable.Rows.RemoveAt(i);
+
+            g.Clear(Color.White);
+            world.Draw(g);
+            pb.Refresh();
+        }
+
+        private void set_goals_Click(object sender, EventArgs e)
+        {
+            world.clear_goal_points();
+            List<int> remove_rows_with_id = new List<int>();
+            for (int i = 0; i < GoalsTable.Rows.Count; i++)
+            {
+                if (GoalsTable.Rows[i].Cells[0].Value == null || GoalsTable.Rows[i].Cells[1].Value == null)
+                    continue;
+                try
+                {
+                    float x = float.Parse(GoalsTable.Rows[i].Cells[0].Value.ToString());
+                    float y = float.Parse(GoalsTable.Rows[i].Cells[1].Value.ToString());
+                    world.add_goalPoints(x, y);
+                }
+                catch
+                {
+                    remove_rows_with_id.Add(i);
+                }
+
+            }
+            foreach (var i in remove_rows_with_id)
+                GoalsTable.Rows.RemoveAt(i);
+
+            g.Clear(Color.White);
+            world.Draw(g);
+            pb.Refresh();
+        }
+
+        private void set_obstacles_Click(object sender, EventArgs e)
+        {
+            world.clear_obstacles();
+            List<int> remove_rows_with_id = new List<int>();
+            for (int i = 0; i < obstaclesTable.Rows.Count; i++)
+            {
+                if (obstaclesTable.Rows[i].Cells[0].Value == null || obstaclesTable.Rows[i].Cells[1].Value == null || obstaclesTable.Rows[i].Cells[2].Value == null)
+                    continue;
+                try
+                {
+                    float x = float.Parse(obstaclesTable.Rows[i].Cells[0].Value.ToString());
+                    float y = float.Parse(obstaclesTable.Rows[i].Cells[1].Value.ToString());
+                    float r = float.Parse(obstaclesTable.Rows[i].Cells[2].Value.ToString());
+                    world.add_obstacle(x, y, 2 * r);
+                }
+                catch
+                {
+                    remove_rows_with_id.Add(i);
+                }
+
+            }
+            foreach (var i in remove_rows_with_id)
+                obstaclesTable.Rows.RemoveAt(i);
+
+            g.Clear(Color.White);
+            world.Draw(g);
+            pb.Refresh();
         }
     }
 }

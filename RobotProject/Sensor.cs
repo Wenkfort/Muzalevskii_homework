@@ -26,40 +26,25 @@ namespace RobotProject
         //new
         public float measuredDist;
 
-        public float CheckDistance(World world, Robot robot)
+        public float CheckDistance(Map map, Robot robot)
         {
             float step = 1;
-            float s = (float)Math.Sin(_angle + robot.Angle);
-            float c = (float)Math.Cos(_angle + robot.Angle);
+            float sin = (float)Math.Sin(_angle + robot.Angle);
+            float cos = (float)Math.Cos(_angle + robot.Angle);
             float xCurrent = _x, yCurrent = _y;           //промежуточные точки луча
 
             for (float i = 0; i < MaxDist; i += step)
             {
-                xCurrent += step * c;
-                yCurrent += step * s;
+                xCurrent += step * cos;
+                yCurrent += step * sin;
 
-                //new
-                if (CheckPoint(robot.X + xCurrent, robot.Y + yCurrent, world.obstacles))
+                if (map.IsCellOccupied(robot.X + xCurrent, robot.Y + yCurrent))
                 {
                     return measuredDist = (float)Math.Sqrt(xCurrent * xCurrent + yCurrent * yCurrent);
                 }
             }
 
-            //new
             return measuredDist = MaxDist;
-        }
-
-        private bool CheckPoint(float x_, float y_, List<Obstacle> obstacles)
-        {
-            for (int i = 0; i < obstacles.Count; i++)
-            {
-                var dx = obstacles[i].X - x_;
-                var dy = obstacles[i].Y - y_;
-
-                if ((float)Math.Sqrt(dx * dx + dy * dy) < obstacles[i].Diameter / 2)
-                    return true;
-            }
-            return false;
         }
     }
 }

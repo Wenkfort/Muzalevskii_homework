@@ -10,9 +10,12 @@ namespace RobotProject
 {
     public class Robot
     {
+        private Map _map;
+        private PointF _goal = new PointF(0, 0);                    
         private float _x;
         private float _y;  //координаты робота
-        private float _width, _height;  //размеры робота
+        private float _width = 50;
+        private float _height = 100;  //размеры робота
         private float _angle;     //угол в радианах
         private float _speed = 0;
         private float _rotSpeed = 0; //скорость движения и поворота робота, [pix/s]
@@ -32,14 +35,14 @@ namespace RobotProject
         public float SteeringWheelAngle => _steeringWheelAngle;
         public float SteeringWheelRotAcc { get => _steeringWheelRotAcc; set => _steeringWheelRotAcc = value; }
         public float Acc { get => _acc; set => _acc = value; }
+        public PointF Goal { get => _goal; set => _goal = value; }
 
-        public Robot(float x, float y, float angle, float width, float height)      //конструктор
+        public Robot(float x, float y, float angle, ref Map map)      //конструктор
         {
             _x = x;
             _y = y;
-            _width = width;
-            _height = height;
             _angle = angle;
+            _map = map;
 
             for (int i = -5; i <= 5; i++)
             {
@@ -48,7 +51,7 @@ namespace RobotProject
         }
 
         public void Draw(Graphics g) //отрисовка
-        {
+        {   
             var t = g.Transform;
             g.TranslateTransform(_x, _y);
             g.RotateTransform(_angle * 180 / (float)Math.PI);
@@ -75,9 +78,8 @@ namespace RobotProject
             g.Transform = t;
         }
 
-        public void Sim(float dt, World world) //симуляция
+        public void Sim(float dt) //симуляция
         {
-
             //new
             _speed += Acc * dt;
             _speed = Math.Sign(_speed) * Math.Max(0, Math.Min(_maxSpeed, Math.Abs(_speed)));
@@ -93,7 +95,8 @@ namespace RobotProject
 
             //new
             foreach (var sensor in sensors)
-                sensor.CheckDistance(world, this);
+                sensor.CheckDistance(_map, this);
+            MoveToGoal();
         }
 
         //new
@@ -104,17 +107,22 @@ namespace RobotProject
             return s;
         }
 
-        public void MoveToGoal(float x, float y)
+        public void MoveToGoal()
         {
-            var gamma = (float)Math.Atan2(y - Y, x - X);
+            var gamma = (float)Math.Atan2(Goal.Y - Y, Goal.X - X);
 
             var alpha = gamma - _angle;    //угол направления на цель
             while (alpha > Math.PI) alpha -= 2 * (float)Math.PI;
             while (alpha < -Math.PI) alpha += 2 * (float)Math.PI;
 
-            if (alpha > 0) _steeringWheelAngle = _maxSteeringWheelAngleAbs; //управление поворотом руля
-            else if (alpha < 0) _steeringWheelAngle = -_maxSteeringWheelAngleAbs;
-            else _steeringWheelAngle = 0;
+            if (alpha == 0) 
+            {
+                _steeringWheelAngle = 0;
+            }
+            else
+            {
+                _steeringWheelAngle = Math.Sign(alpha) * _maxSteeringWheelAngleAbs; //управление поворотом руля
+            }
             _speed = _maxSpeed / 2;
         }
     }
