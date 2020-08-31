@@ -6,67 +6,47 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace RobotProject
 {
+
     public class World  //класс со всеми объектами виртуальной среды
     {
         public Robot robot; //робот
+        private StaticMap staticMap;
         private List<Robot> robots = new List<Robot>();
         private List<PointF> goalPoints = new List<PointF>();
-        private Map map = new Map();
-        private PointF _priorityPoint = new PointF(0, 0);                    
+        private List<double> VScore = new List<double>();
+        private PointF _priorityPoint = new PointF(0, 0);
+
+        public World(ref StaticMap staticMap)
+        {
+            this.staticMap = staticMap;
+        }
 
         public PointF PriorityPoint
         {
             get => _priorityPoint;
             set
             {
-                // TODO: реализовать алгоритм аукциона
-                foreach (var robot in robots)
-                    robot.Goal = value;
-                _priorityPoint  = value;
+                _priorityPoint = value;
             }
         }
 
-        public World()
+        public void set_robots(List<Robot> robots)
         {
-
+            this.robots = robots;
         }
 
-        public void clear_robots()
+        public void set_goalPoints(List<PointF> goalPoints)
         {
-            robots.Clear();
-        }
-
-        public void clear_obstacles()
-        {
-            map.clear_obstacles();
-        }
-
-        public void clear_goal_points()
-        {
-            goalPoints.Clear();
-        }
-
-        public void add_robot(float x, float y, float angle)
-        {
-            robots.Add(new Robot(x, y, angle, ref map));
-        }
-
-        public void add_goalPoints(float x, float y)
-        {
-            goalPoints.Add(new PointF(x, y));
-        }
-
-        public void add_obstacle(float x, float y, float diameter)
-        {
-            map.set_obstacle(x, y, diameter);
+            this.goalPoints = goalPoints;
         }
 
         public void Draw(Graphics g)
         {
-            map.Draw(g);
+            staticMap.Draw(g);
             g.FillEllipse(Brushes.Violet, PriorityPoint.X, PriorityPoint.Y, 5, 5);    //отрисовка приоритетной точки
             foreach (var robot in robots)
             {
@@ -82,8 +62,7 @@ namespace RobotProject
         {
             foreach (var robot in robots)
             {
-                if (robot != null)
-                    robot.Sim(dt);
+                robot.Sim(dt);
             }
         }
 

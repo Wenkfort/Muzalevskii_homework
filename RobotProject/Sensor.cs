@@ -26,7 +26,7 @@ namespace RobotProject
         //new
         public float measuredDist;
 
-        public float CheckDistance(Map map, Robot robot)
+        public float CheckDistance(StaticMap map, Robot robot)
         {
             float step = 1;
             float sin = (float)Math.Sin(_angle + robot.Angle);

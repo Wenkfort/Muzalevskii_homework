@@ -7,20 +7,15 @@ using System.Threading.Tasks;
 
 namespace RobotProject
 {
-    public class Map
+    public class StaticMap
     {
-        public Map() { }
+        public StaticMap() { }
         
         private List<Obstacle> obstacles = new List<Obstacle>();            //список препятствий
 
-        public void set_obstacle(float x, float y, float diameter)
+        public void set_obstacles(List<Obstacle> obstacles)
         {
-            obstacles.Add(new Obstacle(x, y, diameter));
-        }
-
-        public void clear_obstacles()
-        {
-            obstacles.Clear();
+            this.obstacles = obstacles;
         }
 
         public bool IsCellOccupied(float x_, float y_)

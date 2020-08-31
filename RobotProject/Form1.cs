@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace RobotProject
 {
@@ -17,13 +18,14 @@ namespace RobotProject
         int MaxRobotNumber = 10;
         World world;
         Graphics g;             //графический контекст
+        StaticMap static_map = new StaticMap();
 
         private void Form1_Load(object sender, EventArgs e)
         {
             pb.Image = new Bitmap(pb.Width, pb.Height);
             g = Graphics.FromImage(pb.Image);
 
-            world = new World();
+            world = new World(ref static_map);
             init_scene();
             world.Draw(g);  //отрисовка мира
         }
@@ -58,11 +60,15 @@ namespace RobotProject
             if (cb_pause.Checked) return;
 
             var dt = timer1.Interval / 1000f;
-            g.Clear(Color.White);
 
             world.Sim(dt);
-            world.Draw(g);
+            update_picture();
+        }
 
+        private void update_picture()
+        {
+            g.Clear(Color.White);
+            world.Draw(g);
             pb.Refresh();
         }
 
@@ -103,88 +109,110 @@ namespace RobotProject
 
         private void set_robots_Click(object sender, EventArgs e)
         {
-            world.clear_robots();
+            List<Robot> robots = new List<Robot>();
             List<int> remove_rows_with_id = new List<int>();
             for (int i = 0; i < RobotsTable.Rows.Count; i++)
             {
-                if (RobotsTable.Rows[i].Cells[0].Value == null || RobotsTable.Rows[i].Cells[1].Value == null || RobotsTable.Rows[i].Cells[2].Value == null)
-                    continue;
-                try
-                {
-                    float x = float.Parse(RobotsTable.Rows[i].Cells[0].Value.ToString());
-                    float y = float.Parse(RobotsTable.Rows[i].Cells[1].Value.ToString());
-                    float angle = float.Parse(RobotsTable.Rows[i].Cells[2].Value.ToString());
-                    world.add_robot(x, y, angle);
-                }
-                catch
-                {
-                    remove_rows_with_id.Add(i);
-                }
-                
-            }
-            foreach (var i in remove_rows_with_id)
-                RobotsTable.Rows.RemoveAt(i);
+                bool correct_data = true;
 
-            g.Clear(Color.White);
-            world.Draw(g);
-            pb.Refresh();
+                List<float> coords = new List<float>(); 
+                for (int j = 0; j < 3; j++)
+                {
+                    if (RobotsTable.Rows[i].Cells[j].Value == null)
+                    {
+                        RobotsTable.Rows[i].Cells[j].Value = "error";
+                        correct_data = false;
+                    }
+                    try
+                    {
+                        coords.Add(float.Parse(RobotsTable.Rows[i].Cells[j].Value.ToString()));
+                    } 
+                    catch
+                    {
+                        RobotsTable.Rows[i].Cells[j].Value = "error";
+                        correct_data = false;
+                    }
+                }
+
+                if (!correct_data)
+                    continue;
+
+                robots.Add(new Robot(coords[0], coords[1], coords[2], ref static_map));
+            }
+
+            world.set_robots(robots);
+            update_picture();
         }
 
         private void set_goals_Click(object sender, EventArgs e)
         {
-            world.clear_goal_points();
+            List<PointF> goalPoints = new List<PointF>();
             List<int> remove_rows_with_id = new List<int>();
             for (int i = 0; i < GoalsTable.Rows.Count; i++)
             {
-                if (GoalsTable.Rows[i].Cells[0].Value == null || GoalsTable.Rows[i].Cells[1].Value == null)
+                bool correct_data = true;
+                List<float> coords = new List<float>();
+                for (int j = 0; j < 2; j++)
+                {
+                    if (GoalsTable.Rows[i].Cells[j].Value == null)
+                    {
+                        correct_data = false;
+                        GoalsTable.Rows[i].Cells[j].Value = "error";
+                    }
+                    try
+                    {
+                        coords.Add(float.Parse(GoalsTable.Rows[i].Cells[j].Value.ToString()));
+                    }
+                    catch
+                    {
+                        GoalsTable.Rows[i].Cells[j].Value = "error";
+                        correct_data = false;
+                    }
+                }
+
+                if (!correct_data)
                     continue;
-                try
-                {
-                    float x = float.Parse(GoalsTable.Rows[i].Cells[0].Value.ToString());
-                    float y = float.Parse(GoalsTable.Rows[i].Cells[1].Value.ToString());
-                    world.add_goalPoints(x, y);
-                }
-                catch
-                {
-                    remove_rows_with_id.Add(i);
-                }
 
+                goalPoints.Add(new PointF(coords[0], coords[1]));
             }
-            foreach (var i in remove_rows_with_id)
-                GoalsTable.Rows.RemoveAt(i);
 
-            g.Clear(Color.White);
-            world.Draw(g);
-            pb.Refresh();
+            world.set_goalPoints(goalPoints);
+            update_picture();
         }
 
         private void set_obstacles_Click(object sender, EventArgs e)
         {
-            world.clear_obstacles();
+            List<Obstacle> obstacles = new List<Obstacle>();
             List<int> remove_rows_with_id = new List<int>();
             for (int i = 0; i < obstaclesTable.Rows.Count; i++)
             {
-                if (obstaclesTable.Rows[i].Cells[0].Value == null || obstaclesTable.Rows[i].Cells[1].Value == null || obstaclesTable.Rows[i].Cells[2].Value == null)
+                bool correct_data = true;
+                List<float> coords = new List<float>();
+                for (int j = 0; j < 3; j++)
+                {
+                    if (obstaclesTable.Rows[i].Cells[j].Value == null)
+                    {
+                        obstaclesTable.Rows[i].Cells[j].Value = "error";
+                        correct_data = false;
+                    }
+                    try
+                    {
+                        coords.Add(float.Parse(obstaclesTable.Rows[i].Cells[j].Value.ToString()));
+                    }
+                    catch
+                    {
+                        obstaclesTable.Rows[i].Cells[j].Value = "error";
+                        correct_data = false;
+                    }
+                }
+
+                if (!correct_data)
                     continue;
-                try
-                {
-                    float x = float.Parse(obstaclesTable.Rows[i].Cells[0].Value.ToString());
-                    float y = float.Parse(obstaclesTable.Rows[i].Cells[1].Value.ToString());
-                    float r = float.Parse(obstaclesTable.Rows[i].Cells[2].Value.ToString());
-                    world.add_obstacle(x, y, 2 * r);
-                }
-                catch
-                {
-                    remove_rows_with_id.Add(i);
-                }
-
+                obstacles.Add(new Obstacle(coords[0], coords[1], 2 * coords[2]));
             }
-            foreach (var i in remove_rows_with_id)
-                obstaclesTable.Rows.RemoveAt(i);
 
-            g.Clear(Color.White);
-            world.Draw(g);
-            pb.Refresh();
+            static_map.set_obstacles(obstacles);
+            update_picture();
         }
     }
 }

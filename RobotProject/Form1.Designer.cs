@@ -105,7 +105,6 @@
             this.Alpha});
             this.RobotsTable.Location = new System.Drawing.Point(6, 26);
             this.RobotsTable.Name = "RobotsTable";
-            this.RobotsTable.RowHeadersVisible = false;
             this.RobotsTable.RowHeadersWidth = 25;
             this.RobotsTable.RowTemplate.Height = 28;
             this.RobotsTable.Size = new System.Drawing.Size(185, 300);

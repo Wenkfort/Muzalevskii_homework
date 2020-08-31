@@ -10,12 +10,13 @@ namespace RobotProject
 {
     public class Robot
     {
-        private Map _map;
+        private List<float> CScore = new List<float>();
+        private StaticMap _map;
         private PointF _goal = new PointF(0, 0);                    
         private float _x;
         private float _y;  //координаты робота
-        private float _width = 50;
-        private float _height = 100;  //размеры робота
+        private float _width = 25;
+        private float _height = 50;  //размеры робота
         private float _angle;     //угол в радианах
         private float _speed = 0;
         private float _rotSpeed = 0; //скорость движения и поворота робота, [pix/s]
@@ -30,14 +31,12 @@ namespace RobotProject
         public float Angle => _angle; 
         public float X => _x;
         public float Y => _y;
-        public float Speed => _speed;
         public float Rot_speed => _rotSpeed;
-        public float SteeringWheelAngle => _steeringWheelAngle;
-        public float SteeringWheelRotAcc { get => _steeringWheelRotAcc; set => _steeringWheelRotAcc = value; }
         public float Acc { get => _acc; set => _acc = value; }
         public PointF Goal { get => _goal; set => _goal = value; }
+        public List<float> CScore1 { get => CScore; set => CScore = value; }
 
-        public Robot(float x, float y, float angle, ref Map map)      //конструктор
+        public Robot(float x, float y, float angle, ref StaticMap map)      //конструктор
         {
             _x = x;
             _y = y;
@@ -94,17 +93,10 @@ namespace RobotProject
             _angle += Rot_speed * dt;
 
             //new
+            float distance;
             foreach (var sensor in sensors)
-                sensor.CheckDistance(_map, this);
+                distance = sensor.CheckDistance(_map, this);
             MoveToGoal();
-        }
-
-        //new
-        public string ShowSensors(string separator)
-        {
-            var s = string.Join(separator,
-                                sensors.Select(x => x.measuredDist.ToString("F0", CultureInfo.InvariantCulture)));
-            return s;
         }
 
         public void MoveToGoal()
