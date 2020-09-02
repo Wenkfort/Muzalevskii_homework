@@ -22,7 +22,7 @@ namespace RobotProject
         private float _speed = 0;
         private float _rotSpeed = 0; //скорость движения и поворота робота, [pix/s]
         private float _acc;    //ускорение движения робота
-        private float _steeringWheelRotAcc;    //ускорение поворота руля робота
+        private float _steeringWheelRotAcc = 0.14f;    //ускорение поворота руля робота
         private float _steeringWheelAngle;   //угол руления робота
         private const float _maxSpeed = 100;
         private const float _maxSteeringWheelAngleAbs = 1;
@@ -110,10 +110,10 @@ namespace RobotProject
             float distance;
             foreach (var sensor in sensors)
                 distance = sensor.CheckDistance(_map, this);
-            MoveToGoal();
+            MoveToGoal(dt);
         }
 
-        public void MoveToGoal()
+        public void MoveToGoal(float dt)
         { 
             var gamma = (float)Math.Atan2(Goal.Y - Y, Goal.X - X);
 

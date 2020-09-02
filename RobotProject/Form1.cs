@@ -35,12 +35,16 @@ namespace RobotProject
         private void init_scene()
         {
             RobotsTable.Rows.Add();
+            RobotsTable.Rows.Add();
             RobotsTable.Rows[0].Cells[0].Value = 50;
             RobotsTable.Rows[0].Cells[1].Value = 50;
             RobotsTable.Rows[0].Cells[2].Value = 0;
             RobotsTable.Rows[1].Cells[0].Value = 50;
             RobotsTable.Rows[1].Cells[1].Value = 150;
             RobotsTable.Rows[1].Cells[2].Value = 0;
+            RobotsTable.Rows[2].Cells[0].Value = 50;
+            RobotsTable.Rows[2].Cells[1].Value = 100;
+            RobotsTable.Rows[2].Cells[2].Value = 0;
 
             GoalsTable.Rows.Add();
             GoalsTable.Rows.Add();
@@ -53,7 +57,7 @@ namespace RobotProject
 
             obstaclesTable.Rows.Add();
             obstaclesTable.Rows[0].Cells[0].Value = 150;
-            obstaclesTable.Rows[0].Cells[1].Value = 350;
+            obstaclesTable.Rows[0].Cells[1].Value = 150;
             obstaclesTable.Rows[0].Cells[2].Value = 10;
             obstaclesTable.Rows[1].Cells[0].Value = 350;
             obstaclesTable.Rows[1].Cells[1].Value = 150;

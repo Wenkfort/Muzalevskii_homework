@@ -54,7 +54,7 @@ namespace RobotProject
             return CScores;
         }
 
-        public bool auction_targets(float[,] CScores)
+        public void auction_targets(float[,] CScores)
         {
             List<int> notAnsignedGoalIds = new List<int>();
             List<int> notAnsignedRobotsIds = new List<int>();
@@ -64,7 +64,7 @@ namespace RobotProject
                     notAnsignedGoalIds.Add(goal.id);
 
             if (notAnsignedGoalIds.Count == 0)
-                return false;
+                return;
 
             foreach (var robot in robots)
                 notAnsignedRobotsIds.Add(robot.id);
@@ -72,7 +72,7 @@ namespace RobotProject
             int notAnsignedGoalIdsCount = notAnsignedGoalIds.Count;
             for (int i = 0; i < Math.Min(robots.Count, notAnsignedGoalIdsCount); i++)
             {
-                logTextBox.Text += "\nNotAnsigned Goals ids:";
+                //logTextBox.Text += "\nNotAnsigned Goals ids:";
                 int MostPriorityGoalId = -1;
                 float VscoreMax = float.MaxValue;
                 foreach (var goalId in notAnsignedGoalIds)
@@ -82,10 +82,10 @@ namespace RobotProject
                         MostPriorityGoalId = goalId;
                         VscoreMax = goalPoints[goalId].Vscore;
                     }
-                    logTextBox.Text += goalId.ToString() + ", ";
+                    //logTextBox.Text += goalId.ToString() + ", ";
                 }
 
-                logTextBox.Text += "\nNotAnsigned Robots ids:";
+                //logTextBox.Text += "\nNotAnsigned Robots ids:";
                 float NearestRobotDist = float.MaxValue;
                 int NearestRobotId = -1;
                 foreach (var robotId in notAnsignedRobotsIds)
@@ -95,7 +95,7 @@ namespace RobotProject
                         NearestRobotDist = CScores[robotId, MostPriorityGoalId];
                         NearestRobotId = robotId;
                     }
-                    logTextBox.Text += robotId.ToString() + ", ";
+                    //logTextBox.Text += robotId.ToString() + ", ";
                 }
 
 
@@ -108,8 +108,7 @@ namespace RobotProject
                 for (int k = 0; k < notAnsignedRobotsIds.Count; k++)
                     if (notAnsignedRobotsIds[k] == NearestRobotId)
                         notAnsignedRobotsIds.RemoveAt(k);
-                }
-            return true;
+            }
         }
 
         public void set_robot_goal(int robot_id, int goal_id)
