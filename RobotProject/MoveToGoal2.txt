@@ -1,4 +1,4 @@
-﻿public void MoveToGoal(float x, float y)
+public void MoveToGoal(float x, float y)
 {
 	var beta = a;
 

@@ -121,11 +121,38 @@ namespace RobotProject
             while (alpha > Math.PI) alpha -= 2 * (float)Math.PI;
             while (alpha < -Math.PI) alpha += 2 * (float)Math.PI;
 
-            if (alpha == 0) 
-                _steeringWheelAngle = 0;
-            else
-                _steeringWheelAngle = Math.Sign(alpha) * _maxSteeringWheelAngleAbs; //управление поворотом руля
-            _speed = _maxSpeed / 2;
+            var obstacle_dir = GetObstacleDir();
+
+            if (obstacle_dir != 0)
+            {
+                _steeringWheelAngle = Math.Sign(obstacle_dir) * _maxSteeringWheelAngleAbs;
+            } else
+            {
+                if (alpha == 0)
+                    _steeringWheelAngle = 0;
+                else
+                    _steeringWheelAngle = Math.Sign(alpha) * _maxSteeringWheelAngleAbs; //управление поворотом руля
+                _speed = _maxSpeed / 2;
+            }
+            
+
+            float pi = (float)Math.PI, pi2 = 2 * pi;
+            while (alpha > pi) alpha -= pi2;
+            while (alpha < -pi) alpha += pi2;
+        }
+
+        private float GetObstacleDir()
+        {
+            float s = 0;
+            var c = sensors.Count;
+            for (int i = 0; i < c; i++)
+            {
+                float sign = 0;
+                if (i < c / 2) sign = -1;
+                if (i > c / 2) sign = 1;
+                s += sign * sensors[i].measuredDist / sensors[i].MaxDist;
+            }
+            return s / c;
         }
     }
 }
