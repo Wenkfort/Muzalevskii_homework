@@ -10,9 +10,10 @@ namespace RobotProject
 {
     public class Robot
     {
-        private List<float> CScore = new List<float>();
+        public bool goalRiched = false;
         private StaticMap _map;
-        private PointF _goal = new PointF(0, 0);                    
+        public int id = -1;
+        private Goal _goal;                    
         private float _x;
         private float _y;  //координаты робота
         private float _width = 25;
@@ -33,15 +34,21 @@ namespace RobotProject
         public float Y => _y;
         public float Rot_speed => _rotSpeed;
         public float Acc { get => _acc; set => _acc = value; }
-        public PointF Goal { get => _goal; set => _goal = value; }
-        public List<float> CScore1 { get => CScore; set => CScore = value; }
+        public Goal Goal { get => _goal; 
+            set
+            {
+                _goal = value;
+                goalRiched = false;
+            }
+        }
 
-        public Robot(float x, float y, float angle, ref StaticMap map)      //конструктор
+        public Robot(float x, float y, float angle, int id, ref StaticMap map)
         {
             _x = x;
             _y = y;
             _angle = angle;
             _map = map;
+            this.id = id;
 
             for (int i = -5; i <= 5; i++)
             {
@@ -79,6 +86,13 @@ namespace RobotProject
 
         public void Sim(float dt) //симуляция
         {
+            float dist_to_goal = CommonMethods.dist_between_points(Goal.X, Goal.Y, X, Y);
+            if (dist_to_goal < 10)
+            {
+                goalRiched = true;
+                return;
+            }
+
             //new
             _speed += Acc * dt;
             _speed = Math.Sign(_speed) * Math.Max(0, Math.Min(_maxSpeed, Math.Abs(_speed)));
@@ -100,7 +114,7 @@ namespace RobotProject
         }
 
         public void MoveToGoal()
-        {
+        { 
             var gamma = (float)Math.Atan2(Goal.Y - Y, Goal.X - X);
 
             var alpha = gamma - _angle;    //угол направления на цель
@@ -108,13 +122,9 @@ namespace RobotProject
             while (alpha < -Math.PI) alpha += 2 * (float)Math.PI;
 
             if (alpha == 0) 
-            {
                 _steeringWheelAngle = 0;
-            }
             else
-            {
                 _steeringWheelAngle = Math.Sign(alpha) * _maxSteeringWheelAngleAbs; //управление поворотом руля
-            }
             _speed = _maxSpeed / 2;
         }
     }

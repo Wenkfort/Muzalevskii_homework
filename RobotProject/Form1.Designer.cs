@@ -50,6 +50,8 @@
             this.R = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.set_obstacles = new System.Windows.Forms.Button();
             this.obstaclesBox = new System.Windows.Forms.GroupBox();
+            this.logTextBox = new System.Windows.Forms.RichTextBox();
+            this.stopSim = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
             this.robotsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RobotsTable)).BeginInit();
@@ -77,7 +79,7 @@
             // cb_pause
             // 
             this.cb_pause.AutoSize = true;
-            this.cb_pause.Location = new System.Drawing.Point(764, 532);
+            this.cb_pause.Location = new System.Drawing.Point(1235, 497);
             this.cb_pause.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cb_pause.Name = "cb_pause";
             this.cb_pause.Size = new System.Drawing.Size(80, 24);
@@ -105,7 +107,7 @@
             this.Alpha});
             this.RobotsTable.Location = new System.Drawing.Point(6, 26);
             this.RobotsTable.Name = "RobotsTable";
-            this.RobotsTable.RowHeadersWidth = 25;
+            this.RobotsTable.RowHeadersWidth = 10;
             this.RobotsTable.RowTemplate.Height = 28;
             this.RobotsTable.Size = new System.Drawing.Size(185, 300);
             this.RobotsTable.TabIndex = 103;
@@ -161,8 +163,7 @@
             this.dataGridViewTextBoxColumn2});
             this.GoalsTable.Location = new System.Drawing.Point(6, 25);
             this.GoalsTable.Name = "GoalsTable";
-            this.GoalsTable.RowHeadersVisible = false;
-            this.GoalsTable.RowHeadersWidth = 25;
+            this.GoalsTable.RowHeadersWidth = 10;
             this.GoalsTable.RowTemplate.Height = 28;
             this.GoalsTable.Size = new System.Drawing.Size(124, 300);
             this.GoalsTable.TabIndex = 104;
@@ -194,7 +195,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1235, 529);
+            this.button1.Location = new System.Drawing.Point(1235, 455);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 29);
             this.button1.TabIndex = 101;
@@ -211,8 +212,7 @@
             this.R});
             this.obstaclesTable.Location = new System.Drawing.Point(6, 26);
             this.obstaclesTable.Name = "obstaclesTable";
-            this.obstaclesTable.RowHeadersVisible = false;
-            this.obstaclesTable.RowHeadersWidth = 25;
+            this.obstaclesTable.RowHeadersWidth = 10;
             this.obstaclesTable.RowTemplate.Height = 28;
             this.obstaclesTable.Size = new System.Drawing.Size(176, 300);
             this.obstaclesTable.TabIndex = 104;
@@ -259,11 +259,31 @@
             this.obstaclesBox.TabStop = false;
             this.obstaclesBox.Text = "Obstacles";
             // 
+            // logTextBox
+            // 
+            this.logTextBox.Location = new System.Drawing.Point(764, 455);
+            this.logTextBox.Name = "logTextBox";
+            this.logTextBox.Size = new System.Drawing.Size(336, 96);
+            this.logTextBox.TabIndex = 106;
+            this.logTextBox.Text = "";
+            // 
+            // stopSim
+            // 
+            this.stopSim.Location = new System.Drawing.Point(1235, 529);
+            this.stopSim.Name = "stopSim";
+            this.stopSim.Size = new System.Drawing.Size(75, 31);
+            this.stopSim.TabIndex = 107;
+            this.stopSim.Text = "stop";
+            this.stopSim.UseVisualStyleBackColor = true;
+            this.stopSim.Click += new System.EventHandler(this.stopSim_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1338, 572);
+            this.Controls.Add(this.stopSim);
+            this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.goalsBox);
             this.Controls.Add(this.robotsBox);
@@ -311,6 +331,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn R;
+        private System.Windows.Forms.RichTextBox logTextBox;
+        private System.Windows.Forms.Button stopSim;
     }
 }
 
