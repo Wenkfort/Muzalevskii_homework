@@ -140,7 +140,10 @@ namespace RobotProject
             }
             foreach (var goal in goalPoints)
             {
-                g.FillEllipse(Brushes.Red, goal.X, goal.Y, 5, 5);    //отрисовка целевых точек
+                Brush color = Brushes.Red;
+                if (goal.status == "riched")
+                    color = Brushes.Green;
+                g.FillEllipse(color, goal.X, goal.Y, 5, 5);    //отрисовка целевых точек
                 Font font = new Font("Microsoft Sans Serif", 8F, FontStyle.Bold, GraphicsUnit.Point);
                 g.DrawString(goal.id.ToString(), font, Brushes.Red, goal.X + 2, goal.Y + 2);
             }
