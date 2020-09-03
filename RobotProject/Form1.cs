@@ -34,8 +34,15 @@ namespace RobotProject
 
         private void init_scene()
         {
-            RobotsTable.Rows.Add();
-            RobotsTable.Rows.Add();
+            goalsNumber.Value = 3;
+            GoalsTable.Rows[0].Cells[0].Value = 200;
+            GoalsTable.Rows[0].Cells[1].Value = 200;
+            GoalsTable.Rows[1].Cells[0].Value = 300;
+            GoalsTable.Rows[1].Cells[1].Value = 200;
+            GoalsTable.Rows[2].Cells[0].Value = 100;
+            GoalsTable.Rows[2].Cells[1].Value = 200;
+
+            robotsNumber.Value = 3;
             RobotsTable.Rows[0].Cells[0].Value = 50;
             RobotsTable.Rows[0].Cells[1].Value = 50;
             RobotsTable.Rows[0].Cells[2].Value = 0;
@@ -46,16 +53,7 @@ namespace RobotProject
             RobotsTable.Rows[2].Cells[1].Value = 100;
             RobotsTable.Rows[2].Cells[2].Value = 0;
 
-            GoalsTable.Rows.Add();
-            GoalsTable.Rows.Add();
-            GoalsTable.Rows[0].Cells[0].Value = 200;
-            GoalsTable.Rows[0].Cells[1].Value = 200;
-            GoalsTable.Rows[1].Cells[0].Value = 300;
-            GoalsTable.Rows[1].Cells[1].Value = 200;
-            GoalsTable.Rows[2].Cells[0].Value = 100;
-            GoalsTable.Rows[2].Cells[1].Value = 200;
-
-            obstaclesTable.Rows.Add();
+            obstaclesNumber.Value = 2;
             obstaclesTable.Rows[0].Cells[0].Value = 150;
             obstaclesTable.Rows[0].Cells[1].Value = 150;
             obstaclesTable.Rows[0].Cells[2].Value = 10;
@@ -96,27 +94,7 @@ namespace RobotProject
             world.PriorityPoint = new PointF(p.X, p.Y);
             update_picture();
         }
-
-        private void GoalsTable_UserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-            if (GoalsTable.Rows.Count <= MaxGoalsNumber)
-                GoalsTable.AllowUserToAddRows = true;
-            else
-                GoalsTable.AllowUserToAddRows = false;
-        }
-
-        private void RobotsTable_UserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-            if (RobotsTable.Rows.Count <= MaxRobotNumber)
-                RobotsTable.AllowUserToAddRows = true;
-            else
-                RobotsTable.AllowUserToAddRows = false;
-        }
-        private void set_robots_Click(object sender, EventArgs e)
-        {
-            set_robots_();
-        }
-
+        
         private void set_robots_()
         {
             int robot_id = 0;
@@ -154,11 +132,6 @@ namespace RobotProject
 
             world.set_robots(robots);
             update_picture();
-        }
-
-        private void set_goals_Click(object sender, EventArgs e)
-        {
-            set_goals_();
         }
 
         private void set_goals_()
@@ -204,11 +177,6 @@ namespace RobotProject
             update_picture();
         }
 
-        private void set_obstacles_Click(object sender, EventArgs e)
-        {
-            set_obstacles_();
-        }
-
         private void set_obstacles_()
         {
             List<Obstacle> obstacles = new List<Obstacle>();
@@ -249,8 +217,43 @@ namespace RobotProject
             set_obstacles_();
             set_robots_();
             set_goals_();
+            logTextBox.Text = "";
             world.PriorityPoint = world.PriorityPoint;
             timer1.Enabled = false;
+        }
+
+        private void setSceneClick(object sender, EventArgs e)
+        {
+            set_obstacles_();
+            set_robots_();
+            set_goals_();
+        }
+
+        private void obstaclesNumber_ValueChanged(object sender, EventArgs e)
+        {
+            while (obstaclesTable.Rows.Count < obstaclesNumber.Value)
+                obstaclesTable.Rows.Add();
+
+            while (obstaclesTable.Rows.Count > obstaclesNumber.Value)
+                obstaclesTable.Rows.RemoveAt(obstaclesTable.Rows.Count - 1);
+        }
+
+        private void goalsNumber_ValueChanged(object sender, EventArgs e)
+        {
+            while(GoalsTable.Rows.Count < goalsNumber.Value)
+                GoalsTable.Rows.Add();
+
+            while(GoalsTable.Rows.Count > goalsNumber.Value)
+                GoalsTable.Rows.RemoveAt(GoalsTable.Rows.Count - 1);
+        }
+
+        private void robotsNumber_ValueChanged(object sender, EventArgs e)
+        {
+            while (RobotsTable.Rows.Count < robotsNumber.Value)
+                RobotsTable.Rows.Add();
+
+            while (RobotsTable.Rows.Count > robotsNumber.Value)
+                RobotsTable.Rows.RemoveAt(RobotsTable.Rows.Count - 1);
         }
     }
 }

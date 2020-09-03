@@ -29,7 +29,7 @@ namespace RobotProject
 
         public List<Sensor> sensors = new List<Sensor>();   //дальномеры
 
-        public float Angle => _angle; 
+        public float Angle { get {return _angle; } } 
         public float X { get => _x; }
         public float Y { get => _y; }
         public float Rot_speed { get => _rotSpeed; }
@@ -84,13 +84,13 @@ namespace RobotProject
             g.Transform = t;
         }
 
-        public void Sim(float dt) //симуляция
+        public bool MoveToGoal(float dt) //симуляция
         {
             float dist_to_goal = CommonMethods.dist_between_points(Goal.X, Goal.Y, X, Y);
-            if (dist_to_goal < 10)
+            if (dist_to_goal < 10 && !goalRiched)
             {
                 goalRiched = true;
-                return;
+                return true;
             }
 
             //new
@@ -110,10 +110,11 @@ namespace RobotProject
             float distance;
             foreach (var sensor in sensors)
                 distance = sensor.CheckDistance(_map, this);
-            MoveToGoal(dt);
+            Sim(dt);
+            return false;
         }
 
-        public void MoveToGoal(float dt)
+        private void Sim(float dt)
         { 
             var gamma = (float)Math.Atan2(Goal.Y - Y, Goal.X - X);
 

@@ -37,21 +37,22 @@
             this.X = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Y = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Alpha = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.set_robots = new System.Windows.Forms.Button();
             this.goalsBox = new System.Windows.Forms.GroupBox();
             this.GoalsTable = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.set_goals = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.obstaclesTable = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.R = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.set_obstacles = new System.Windows.Forms.Button();
-            this.obstaclesBox = new System.Windows.Forms.GroupBox();
             this.logTextBox = new System.Windows.Forms.RichTextBox();
             this.stopSim = new System.Windows.Forms.Button();
+            this.set_Scene = new System.Windows.Forms.Button();
+            this.obstaclesTable = new System.Windows.Forms.DataGridView();
+            this.R = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.obstaclesBox = new System.Windows.Forms.GroupBox();
+            this.robotsNumber = new System.Windows.Forms.NumericUpDown();
+            this.goalsNumber = new System.Windows.Forms.NumericUpDown();
+            this.obstaclesNumber = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
             this.robotsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RobotsTable)).BeginInit();
@@ -59,6 +60,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.GoalsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.obstaclesTable)).BeginInit();
             this.obstaclesBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.robotsNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.goalsNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.obstaclesNumber)).BeginInit();
             this.SuspendLayout();
             // 
             // pb
@@ -79,7 +83,7 @@
             // cb_pause
             // 
             this.cb_pause.AutoSize = true;
-            this.cb_pause.Location = new System.Drawing.Point(1235, 497);
+            this.cb_pause.Location = new System.Drawing.Point(1148, 527);
             this.cb_pause.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cb_pause.Name = "cb_pause";
             this.cb_pause.Size = new System.Drawing.Size(80, 24);
@@ -89,17 +93,19 @@
             // 
             // robotsBox
             // 
+            this.robotsBox.Controls.Add(this.robotsNumber);
             this.robotsBox.Controls.Add(this.RobotsTable);
-            this.robotsBox.Controls.Add(this.set_robots);
             this.robotsBox.Location = new System.Drawing.Point(764, 20);
             this.robotsBox.Name = "robotsBox";
-            this.robotsBox.Size = new System.Drawing.Size(200, 429);
+            this.robotsBox.Size = new System.Drawing.Size(200, 374);
             this.robotsBox.TabIndex = 99;
             this.robotsBox.TabStop = false;
             this.robotsBox.Text = "Robots";
             // 
             // RobotsTable
             // 
+            this.RobotsTable.AllowUserToAddRows = false;
+            this.RobotsTable.AllowUserToDeleteRows = false;
             this.RobotsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RobotsTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.X,
@@ -107,11 +113,11 @@
             this.Alpha});
             this.RobotsTable.Location = new System.Drawing.Point(6, 26);
             this.RobotsTable.Name = "RobotsTable";
+            this.RobotsTable.RowHeadersVisible = false;
             this.RobotsTable.RowHeadersWidth = 10;
             this.RobotsTable.RowTemplate.Height = 28;
             this.RobotsTable.Size = new System.Drawing.Size(185, 300);
             this.RobotsTable.TabIndex = 103;
-            this.RobotsTable.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.RobotsTable_UserAddedRow);
             // 
             // X
             // 
@@ -134,40 +140,32 @@
             this.Alpha.Name = "Alpha";
             this.Alpha.Width = 40;
             // 
-            // set_robots
-            // 
-            this.set_robots.Location = new System.Drawing.Point(106, 394);
-            this.set_robots.Name = "set_robots";
-            this.set_robots.Size = new System.Drawing.Size(80, 29);
-            this.set_robots.TabIndex = 102;
-            this.set_robots.Text = "set";
-            this.set_robots.UseVisualStyleBackColor = true;
-            this.set_robots.Click += new System.EventHandler(this.set_robots_Click);
-            // 
             // goalsBox
             // 
+            this.goalsBox.Controls.Add(this.goalsNumber);
             this.goalsBox.Controls.Add(this.GoalsTable);
-            this.goalsBox.Controls.Add(this.set_goals);
             this.goalsBox.Location = new System.Drawing.Point(970, 20);
             this.goalsBox.Name = "goalsBox";
-            this.goalsBox.Size = new System.Drawing.Size(141, 429);
+            this.goalsBox.Size = new System.Drawing.Size(141, 374);
             this.goalsBox.TabIndex = 100;
             this.goalsBox.TabStop = false;
             this.goalsBox.Text = "Goals";
             // 
             // GoalsTable
             // 
+            this.GoalsTable.AllowUserToAddRows = false;
+            this.GoalsTable.AllowUserToDeleteRows = false;
             this.GoalsTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.GoalsTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
             this.GoalsTable.Location = new System.Drawing.Point(6, 25);
             this.GoalsTable.Name = "GoalsTable";
+            this.GoalsTable.RowHeadersVisible = false;
             this.GoalsTable.RowHeadersWidth = 10;
             this.GoalsTable.RowTemplate.Height = 28;
             this.GoalsTable.Size = new System.Drawing.Size(124, 300);
             this.GoalsTable.TabIndex = 104;
-            this.GoalsTable.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.GoalsTable_UserAddedRow);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -183,81 +181,15 @@
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.Width = 40;
             // 
-            // set_goals
-            // 
-            this.set_goals.Location = new System.Drawing.Point(50, 394);
-            this.set_goals.Name = "set_goals";
-            this.set_goals.Size = new System.Drawing.Size(80, 29);
-            this.set_goals.TabIndex = 103;
-            this.set_goals.Text = "set";
-            this.set_goals.UseVisualStyleBackColor = true;
-            this.set_goals.Click += new System.EventHandler(this.set_goals_Click);
-            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1235, 455);
+            this.button1.Location = new System.Drawing.Point(1235, 485);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 29);
             this.button1.TabIndex = 101;
             this.button1.Text = "start";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.start_simulation);
-            // 
-            // obstaclesTable
-            // 
-            this.obstaclesTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.obstaclesTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridViewTextBoxColumn3,
-            this.dataGridViewTextBoxColumn4,
-            this.R});
-            this.obstaclesTable.Location = new System.Drawing.Point(6, 26);
-            this.obstaclesTable.Name = "obstaclesTable";
-            this.obstaclesTable.RowHeadersWidth = 10;
-            this.obstaclesTable.RowTemplate.Height = 28;
-            this.obstaclesTable.Size = new System.Drawing.Size(176, 300);
-            this.obstaclesTable.TabIndex = 104;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.HeaderText = "X";
-            this.dataGridViewTextBoxColumn3.MinimumWidth = 40;
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.Width = 40;
-            // 
-            // dataGridViewTextBoxColumn4
-            // 
-            this.dataGridViewTextBoxColumn4.HeaderText = "Y";
-            this.dataGridViewTextBoxColumn4.MinimumWidth = 40;
-            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
-            this.dataGridViewTextBoxColumn4.Width = 40;
-            // 
-            // R
-            // 
-            this.R.HeaderText = "R";
-            this.R.MinimumWidth = 40;
-            this.R.Name = "R";
-            this.R.Width = 40;
-            // 
-            // set_obstacles
-            // 
-            this.set_obstacles.Location = new System.Drawing.Point(102, 394);
-            this.set_obstacles.Name = "set_obstacles";
-            this.set_obstacles.Size = new System.Drawing.Size(80, 29);
-            this.set_obstacles.TabIndex = 103;
-            this.set_obstacles.Text = "set";
-            this.set_obstacles.UseVisualStyleBackColor = true;
-            this.set_obstacles.Click += new System.EventHandler(this.set_obstacles_Click);
-            // 
-            // obstaclesBox
-            // 
-            this.obstaclesBox.Controls.Add(this.obstaclesTable);
-            this.obstaclesBox.Controls.Add(this.set_obstacles);
-            this.obstaclesBox.Location = new System.Drawing.Point(1117, 20);
-            this.obstaclesBox.Name = "obstaclesBox";
-            this.obstaclesBox.Size = new System.Drawing.Size(193, 429);
-            this.obstaclesBox.TabIndex = 105;
-            this.obstaclesBox.TabStop = false;
-            this.obstaclesBox.Text = "Obstacles";
             // 
             // logTextBox
             // 
@@ -269,7 +201,7 @@
             // 
             // stopSim
             // 
-            this.stopSim.Location = new System.Drawing.Point(1235, 529);
+            this.stopSim.Location = new System.Drawing.Point(1235, 520);
             this.stopSim.Name = "stopSim";
             this.stopSim.Size = new System.Drawing.Size(75, 31);
             this.stopSim.TabIndex = 107;
@@ -277,12 +209,106 @@
             this.stopSim.UseVisualStyleBackColor = true;
             this.stopSim.Click += new System.EventHandler(this.stopSim_Click);
             // 
+            // set_Scene
+            // 
+            this.set_Scene.Location = new System.Drawing.Point(1230, 431);
+            this.set_Scene.Name = "set_Scene";
+            this.set_Scene.Size = new System.Drawing.Size(80, 29);
+            this.set_Scene.TabIndex = 103;
+            this.set_Scene.Text = "set";
+            this.set_Scene.UseVisualStyleBackColor = true;
+            this.set_Scene.Click += new System.EventHandler(this.setSceneClick);
+            // 
+            // obstaclesTable
+            // 
+            this.obstaclesTable.AllowUserToAddRows = false;
+            this.obstaclesTable.AllowUserToDeleteRows = false;
+            this.obstaclesTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.obstaclesTable.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4,
+            this.R});
+            this.obstaclesTable.Location = new System.Drawing.Point(6, 26);
+            this.obstaclesTable.Name = "obstaclesTable";
+            this.obstaclesTable.RowHeadersVisible = false;
+            this.obstaclesTable.RowHeadersWidth = 10;
+            this.obstaclesTable.RowTemplate.Height = 28;
+            this.obstaclesTable.Size = new System.Drawing.Size(176, 300);
+            this.obstaclesTable.TabIndex = 104;
+            // 
+            // R
+            // 
+            this.R.HeaderText = "R";
+            this.R.MinimumWidth = 40;
+            this.R.Name = "R";
+            this.R.Width = 40;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.HeaderText = "Y";
+            this.dataGridViewTextBoxColumn4.MinimumWidth = 40;
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.Width = 40;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.HeaderText = "X";
+            this.dataGridViewTextBoxColumn3.MinimumWidth = 40;
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.Width = 40;
+            // 
+            // obstaclesBox
+            // 
+            this.obstaclesBox.Controls.Add(this.obstaclesNumber);
+            this.obstaclesBox.Controls.Add(this.obstaclesTable);
+            this.obstaclesBox.Location = new System.Drawing.Point(1117, 20);
+            this.obstaclesBox.Name = "obstaclesBox";
+            this.obstaclesBox.Size = new System.Drawing.Size(193, 374);
+            this.obstaclesBox.TabIndex = 105;
+            this.obstaclesBox.TabStop = false;
+            this.obstaclesBox.Text = "Obstacles";
+            // 
+            // robotsNumber
+            // 
+            this.robotsNumber.Location = new System.Drawing.Point(6, 342);
+            this.robotsNumber.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.robotsNumber.Name = "robotsNumber";
+            this.robotsNumber.Size = new System.Drawing.Size(185, 26);
+            this.robotsNumber.TabIndex = 108;
+            this.robotsNumber.ValueChanged += new System.EventHandler(this.robotsNumber_ValueChanged);
+            // 
+            // goalsNumber
+            // 
+            this.goalsNumber.Location = new System.Drawing.Point(6, 342);
+            this.goalsNumber.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.goalsNumber.Name = "goalsNumber";
+            this.goalsNumber.Size = new System.Drawing.Size(124, 26);
+            this.goalsNumber.TabIndex = 109;
+            this.goalsNumber.ValueChanged += new System.EventHandler(this.goalsNumber_ValueChanged);
+            // 
+            // obstaclesNumber
+            // 
+            this.obstaclesNumber.Location = new System.Drawing.Point(6, 342);
+            this.obstaclesNumber.Name = "obstaclesNumber";
+            this.obstaclesNumber.Size = new System.Drawing.Size(181, 26);
+            this.obstaclesNumber.TabIndex = 110;
+            this.obstaclesNumber.ValueChanged += new System.EventHandler(this.obstaclesNumber_ValueChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1338, 572);
             this.Controls.Add(this.stopSim);
+            this.Controls.Add(this.set_Scene);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.goalsBox);
@@ -303,6 +329,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.GoalsTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.obstaclesTable)).EndInit();
             this.obstaclesBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.robotsNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.goalsNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.obstaclesNumber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -316,8 +345,6 @@
         private System.Windows.Forms.GroupBox robotsBox;
         private System.Windows.Forms.GroupBox goalsBox;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button set_robots;
-        private System.Windows.Forms.Button set_goals;
         private System.Windows.Forms.DataGridView RobotsTable;
         private System.Windows.Forms.DataGridViewTextBoxColumn X;
         private System.Windows.Forms.DataGridViewTextBoxColumn Y;
@@ -325,14 +352,17 @@
         private System.Windows.Forms.DataGridView GoalsTable;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.RichTextBox logTextBox;
+        private System.Windows.Forms.Button stopSim;
+        private System.Windows.Forms.NumericUpDown robotsNumber;
+        private System.Windows.Forms.NumericUpDown goalsNumber;
+        private System.Windows.Forms.Button set_Scene;
         private System.Windows.Forms.DataGridView obstaclesTable;
-        private System.Windows.Forms.Button set_obstacles;
-        private System.Windows.Forms.GroupBox obstaclesBox;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn R;
-        private System.Windows.Forms.RichTextBox logTextBox;
-        private System.Windows.Forms.Button stopSim;
+        private System.Windows.Forms.GroupBox obstaclesBox;
+        private System.Windows.Forms.NumericUpDown obstaclesNumber;
     }
 }
 

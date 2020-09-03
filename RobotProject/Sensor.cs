@@ -11,7 +11,7 @@ namespace RobotProject
         private float _x, _y, _angle;
         private float _maxDist = 100;
 
-        public float X { get => this._x; }
+        public float X { get { return this._x; } }
         public float Y { get => this._y; }
         public float Angle { get => this._angle; }
         public float MaxDist { get => this._maxDist; }

@@ -38,7 +38,6 @@ namespace RobotProject
 
         public float[,] calculate_scores()
         {
-            logTextBox.Text = "";
             for (int i = 0; i < goalPoints.Count; i++)
             {
                 var goal = goalPoints[i];
@@ -65,6 +64,8 @@ namespace RobotProject
 
             if (notAnsignedGoalIds.Count == 0)
                 return;
+
+            logTextBox.Text += "\nAuction:";
 
             foreach (var robot in robots)
                 notAnsignedRobotsIds.Add(robot.id);
@@ -152,8 +153,7 @@ namespace RobotProject
         {
             foreach (var robot in robots)
             {
-                robot.Sim(dt);
-                if (robot.goalRiched)
+                if (robot.MoveToGoal(dt))
                 {
                     Goal goal = goalPoints[robot.Goal.id];
                     goal.status = "riched";
