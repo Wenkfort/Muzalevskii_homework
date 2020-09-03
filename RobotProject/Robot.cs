@@ -10,7 +10,6 @@ namespace RobotProject
 {
     public class Robot
     {
-        public bool goalRiched = false;
         private StaticMap _map;
         public int id = -1;
         private Goal _goal;                    
@@ -38,7 +37,6 @@ namespace RobotProject
             set
             {
                 _goal = value;
-                goalRiched = false;
             }
         }
 
@@ -87,9 +85,8 @@ namespace RobotProject
         public bool MoveToGoal(float dt) //симуляция
         {
             float dist_to_goal = CommonMethods.dist_between_points(Goal.X, Goal.Y, X, Y);
-            if (dist_to_goal < 10 && !goalRiched)
+            if (dist_to_goal < 10)
             {
-                goalRiched = true;
                 return true;
             }
 
