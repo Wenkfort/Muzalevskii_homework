@@ -30,9 +30,9 @@ namespace RobotProject
         public List<Sensor> sensors = new List<Sensor>();   //дальномеры
 
         public float Angle => _angle; 
-        public float X => _x;
-        public float Y => _y;
-        public float Rot_speed => _rotSpeed;
+        public float X { get => _x; }
+        public float Y { get => _y; }
+        public float Rot_speed { get => _rotSpeed; }
         public float Acc { get => _acc; set => _acc = value; }
         public Goal Goal { get => _goal; 
             set

@@ -12,8 +12,8 @@ namespace RobotProject
         private float _x;
         private float _y; //координаты
         private float _diameter; //размер
-        public float X => _x;
-        public float Y => _y;
+        public float X { get => _x; }
+        public float Y { get => _y; }
         public float Diameter => _diameter;
 
         public Obstacle(float x, float y, float diameter)
