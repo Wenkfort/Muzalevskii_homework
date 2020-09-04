@@ -75,6 +75,10 @@ namespace RobotProject
             g.Transform = t;
         }
 
+        /**
+         * Robot`s moving simulation
+         * return true if robot reached goal point and false if not
+         */
         public bool ReachGoal(float dt) //симуляция
         {
             float dist_to_goal = CommonMethods.dist_between_points(Goal.X, Goal.Y, X, Y);
@@ -107,8 +111,7 @@ namespace RobotProject
             var gamma = (float)Math.Atan2(Goal.Y - Y, Goal.X - X);
 
             var alpha = gamma - _angle;    //угол направления на цель
-            while (alpha > Math.PI) alpha -= 2 * (float)Math.PI;
-            while (alpha < -Math.PI) alpha += 2 * (float)Math.PI;
+            alpha = (float)Math.Atan2(Math.Sin(alpha), Math.Cos(alpha));
 
             var obstacle_dir = GetObstacleDir();
 
@@ -117,31 +120,22 @@ namespace RobotProject
                 _steeringWheelAngle = Math.Sign(obstacle_dir) * _maxSteeringWheelAngleAbs;
             } else
             {
-                if (alpha == 0)
-                    _steeringWheelAngle = 0;
-                else
-                    _steeringWheelAngle = Math.Sign(alpha) * _maxSteeringWheelAngleAbs; //управление поворотом руля
+                _steeringWheelAngle = Math.Sign(alpha) * _maxSteeringWheelAngleAbs; //управление поворотом руля
                 _speed = _maxSpeed / 2;
             }
-            
-
-            float pi = (float)Math.PI, pi2 = 2 * pi;
-            while (alpha > pi) alpha -= pi2;
-            while (alpha < -pi) alpha += pi2;
         }
 
         private float GetObstacleDir()
         {
             float s = 0;
-            var c = sensors.Count;
-            for (int i = 0; i < c; i++)
+            for (int i = 0; i < sensors.Count; i++)
             {
                 float sign = 0;
-                if (i < c / 2) sign = -1;
-                if (i > c / 2) sign = 1;
+                if (i < sensors.Count / 2) sign = -1;
+                if (i > sensors.Count / 2) sign = 1;
                 s += sign * sensors[i].measuredDist / sensors[i].MaxDist;
             }
-            return s / c;
+            return s / sensors.Count;
         }
     }
 }

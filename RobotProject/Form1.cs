@@ -24,15 +24,15 @@ namespace RobotProject
         private void Form1_Load(object sender, EventArgs e)
         {
             robotsNumber.Maximum = MaxRobotNumber;
-            goalsNumber.Maximum = MaxRobotNumber;
+            goalsNumber.Maximum = MaxGoalsNumber;
 
             pb.Image = new Bitmap(pb.Width, pb.Height);
             g = Graphics.FromImage(pb.Image);
 
             world = new World(ref static_map, logTextBox);
             init_scene();
-            world.PriorityPoint = new PointF(pb.Width / 2, pb.Height / 2);
             setScene();
+            world.PriorityPoint = new PointF(pb.Width / 2, pb.Height / 2);
             update_picture();
         }
 
@@ -94,7 +94,10 @@ namespace RobotProject
             world.PriorityPoint = new PointF(p.X, p.Y);
             update_picture();
         }
-        
+
+        /**
+         * creating and adding robots in scene 
+         */
         private void SetRobots()
         {
             int robot_id = 0;
@@ -134,6 +137,9 @@ namespace RobotProject
             update_picture();
         }
 
+        /**
+         * creating and adding goals in scene 
+         */
         private void SetGoals()
         {
             int goal_id = 0;
@@ -173,10 +179,13 @@ namespace RobotProject
                 goal_id++;
             }
 
-            world.set_goalPoints(goalPoints);
+            world.SetGoalPoints(goalPoints);
             update_picture();
         }
 
+        /**
+         * creating and adding obstacles in staticMap 
+         */
         private void SetObstacles()
         {
             List<Obstacle> obstacles = new List<Obstacle>();
@@ -212,6 +221,9 @@ namespace RobotProject
             update_picture();
         }
 
+        /*
+         * adding objects to scene 
+         */
         private void setScene()
         {
             SetObstacles();
@@ -224,6 +236,9 @@ namespace RobotProject
             setScene();
         }
 
+        /**
+         * event that occur when value in NumericUpDown window has changed
+         */
         private void obstaclesNumber_ValueChanged(object sender, EventArgs e)
         {
             while (obstaclesTable.Rows.Count < obstaclesNumber.Value)
@@ -233,6 +248,9 @@ namespace RobotProject
                 obstaclesTable.Rows.RemoveAt(obstaclesTable.Rows.Count - 1);
         }
 
+        /**
+         * event that occur when value in NumericUpDown window has changed
+         */
         private void goalsNumber_ValueChanged(object sender, EventArgs e)
         {
             while(GoalsTable.Rows.Count < goalsNumber.Value)
@@ -242,6 +260,9 @@ namespace RobotProject
                 GoalsTable.Rows.RemoveAt(GoalsTable.Rows.Count - 1);
         }
 
+        /**
+         * event that occur when value in NumericUpDown window has changed
+         */
         private void robotsNumber_ValueChanged(object sender, EventArgs e)
         {
             while (RobotsTable.Rows.Count < robotsNumber.Value)
