@@ -10,7 +10,7 @@ namespace RobotProject
     {
         public float X;
         public float Y;
-        public int id;
+        public int Id;
         public float Vscore;
         // goal.status = "not_ansigned", "riched"
         public string status;

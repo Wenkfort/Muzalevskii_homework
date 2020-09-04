@@ -12,9 +12,9 @@ namespace RobotProject
         private float _maxDist = 100;
 
         public float X { get { return this._x; } }
-        public float Y { get => this._y; }
-        public float Angle { get => this._angle; }
-        public float MaxDist { get => this._maxDist; }
+        public float Y { get { return this._y; } }
+        public float Angle { get { return this._angle; } }
+        public float MaxDist { get { return this._maxDist; } }
 
         public Sensor(float x, float y, float angle)
         {

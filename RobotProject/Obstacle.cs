@@ -12,9 +12,9 @@ namespace RobotProject
         private float _x;
         private float _y; //координаты
         private float _diameter; //размер
-        public float X { get => _x; }
-        public float Y { get => _y; }
-        public float Diameter => _diameter;
+        public float X { get { return _x; } }
+        public float Y { get { return _y; } }
+        public float Diameter { get { return _diameter; } }
 
         public Obstacle(float x, float y, float diameter)
         {
@@ -22,7 +22,6 @@ namespace RobotProject
             _y = y;
             _diameter = diameter;
         }
-
 
         public void Draw(Graphics g) //отрисовка
         {   

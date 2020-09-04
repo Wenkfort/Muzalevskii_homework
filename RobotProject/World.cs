@@ -13,11 +13,9 @@ namespace RobotProject
     public class World  //класс со всеми объектами виртуальной среды
     {
         private RichTextBox logTextBox;
-        public Robot robot; //робот
         private StaticMap staticMap;
         private List<Robot> robots = new List<Robot>();
         private List<Goal> goalPoints = new List<Goal>();
-        private List<double> VScore = new List<double>();
         private PointF _priorityPoint;
 
         public World(ref StaticMap staticMap, RichTextBox logTextBox)
@@ -28,24 +26,30 @@ namespace RobotProject
 
         public PointF PriorityPoint
         {
-            get => _priorityPoint;
+            get
+            {
+                return _priorityPoint;
+            }
             set
             {
                 _priorityPoint = value;
-                auction_targets(calculate_scores());
+                AuctionTargets();
             }
         }
 
-        public float[,] calculate_scores()
+        private void UpdateVScores()
         {
             for (int i = 0; i < goalPoints.Count; i++)
             {
                 var goal = goalPoints[i];
-                
+
                 goal.Vscore = CommonMethods.dist_between_points(goal.X, goal.Y, PriorityPoint.X, PriorityPoint.Y);
                 goalPoints[i] = goal;
             }
+        }
 
+        public float[,] CalculateCscores()
+        {
             float[, ] CScores = new float[robots.Count, goalPoints.Count];
             for (int robot_id = 0; robot_id < robots.Count; robot_id++)
                 for (int goal_id = 0; goal_id < goalPoints.Count; goal_id++)
@@ -53,14 +57,17 @@ namespace RobotProject
             return CScores;
         }
 
-        public void auction_targets(float[,] CScores)
+        public void AuctionTargets()
         {
+            UpdateVScores();
+            float[,] CScores = CalculateCscores();
+
             List<int> notAnsignedGoalIds = new List<int>();
             List<int> notAnsignedRobotsIds = new List<int>();
         
             foreach (var goal in goalPoints)
                 if (goal.status != "riched")
-                    notAnsignedGoalIds.Add(goal.id);
+                    notAnsignedGoalIds.Add(goal.Id);
 
             if (notAnsignedGoalIds.Count == 0)
                 return;
@@ -100,7 +107,7 @@ namespace RobotProject
                 }
 
 
-                set_robot_goal(NearestRobotId, MostPriorityGoalId);
+                SetRobotGoal(NearestRobotId, MostPriorityGoalId);
 
                 for (int k = 0; k < notAnsignedGoalIds.Count; k++)
                     if (notAnsignedGoalIds[k] == MostPriorityGoalId)
@@ -112,13 +119,13 @@ namespace RobotProject
             }
         }
 
-        public void set_robot_goal(int robot_id, int goal_id)
+        public void SetRobotGoal(int robot_id, int goal_id)
         {
             logTextBox.Text += "\nrobot_id: " + robot_id.ToString() + " -> goal_id: " + goal_id.ToString();
             robots[robot_id].Goal = goalPoints[goal_id];
         }
 
-        public void set_robots(List<Robot> robots)
+        public void SetRobots(List<Robot> robots)
         {
             this.robots = robots;
         }
@@ -145,22 +152,20 @@ namespace RobotProject
                     color = Brushes.Green;
                 g.FillEllipse(color, goal.X, goal.Y, 5, 5);    //отрисовка целевых точек
                 Font font = new Font("Microsoft Sans Serif", 8F, FontStyle.Bold, GraphicsUnit.Point);
-                g.DrawString(goal.id.ToString(), font, Brushes.Red, goal.X + 2, goal.Y + 2);
+                g.DrawString(goal.Id.ToString(), font, Brushes.Red, goal.X + 2, goal.Y + 2);
             }
         }
 
         public void Sim(float dt)
         {
             foreach (var robot in robots)
-            {
-                if (robot.MoveToGoal(dt))
+                if (robot.ReachGoal(dt))
                 {
-                    Goal goal = goalPoints[robot.Goal.id];
+                    Goal goal = goalPoints[robot.Goal.Id];
                     goal.status = "riched";
-                    goalPoints[robot.Goal.id] = goal;
-                    auction_targets(calculate_scores());
+                    goalPoints[robot.Goal.Id] = goal;
+                    AuctionTargets();
                 }
-            }
         }
     }
 }

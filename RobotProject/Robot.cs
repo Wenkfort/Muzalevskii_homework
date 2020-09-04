@@ -12,7 +12,7 @@ namespace RobotProject
     {
         private StaticMap _map;
         public int id = -1;
-        private Goal _goal;                    
+        private Goal _goal;
         private float _x;
         private float _y;  //координаты робота
         private float _width = 25;
@@ -28,17 +28,12 @@ namespace RobotProject
 
         public List<Sensor> sensors = new List<Sensor>();   //дальномеры
 
-        public float Angle { get {return _angle; } } 
-        public float X { get => _x; }
-        public float Y { get => _y; }
-        public float Rot_speed { get => _rotSpeed; }
-        public float Acc { get => _acc; set => _acc = value; }
-        public Goal Goal { get => _goal; 
-            set
-            {
-                _goal = value;
-            }
-        }
+        public float Angle { get { return _angle; } }
+        public float X { get { return _x; } }
+        public float Y { get { return _y; } }
+        public float Rot_speed { get { return _rotSpeed; } }
+        public float Acc { get { return _acc; }  set { _acc = value; } }
+        public Goal Goal { get { return _goal; } set { _goal = value; } }
 
         public Robot(float x, float y, float angle, int id, ref StaticMap map)
         {
@@ -49,9 +44,7 @@ namespace RobotProject
             this.id = id;
 
             for (int i = -5; i <= 5; i++)
-            {
                 sensors.Add(new Sensor(0, 0, (float)i * 0.1f));
-            }
         }
 
         public void Draw(Graphics g) //отрисовка
@@ -82,13 +75,11 @@ namespace RobotProject
             g.Transform = t;
         }
 
-        public bool MoveToGoal(float dt) //симуляция
+        public bool ReachGoal(float dt) //симуляция
         {
             float dist_to_goal = CommonMethods.dist_between_points(Goal.X, Goal.Y, X, Y);
             if (dist_to_goal < 10)
-            {
                 return true;
-            }
 
             //new
             _speed += Acc * dt;

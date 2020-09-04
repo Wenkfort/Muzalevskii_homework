@@ -33,11 +33,13 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.cb_pause = new System.Windows.Forms.CheckBox();
             this.robotsBox = new System.Windows.Forms.GroupBox();
+            this.robotsNumber = new System.Windows.Forms.NumericUpDown();
             this.RobotsTable = new System.Windows.Forms.DataGridView();
             this.X = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Y = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Alpha = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.goalsBox = new System.Windows.Forms.GroupBox();
+            this.goalsNumber = new System.Windows.Forms.NumericUpDown();
             this.GoalsTable = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -46,22 +48,20 @@
             this.stopSim = new System.Windows.Forms.Button();
             this.set_Scene = new System.Windows.Forms.Button();
             this.obstaclesTable = new System.Windows.Forms.DataGridView();
-            this.R = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.R = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.obstaclesBox = new System.Windows.Forms.GroupBox();
-            this.robotsNumber = new System.Windows.Forms.NumericUpDown();
-            this.goalsNumber = new System.Windows.Forms.NumericUpDown();
             this.obstaclesNumber = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
             this.robotsBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.robotsNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RobotsTable)).BeginInit();
             this.goalsBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.goalsNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GoalsTable)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.obstaclesTable)).BeginInit();
             this.obstaclesBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.robotsNumber)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.goalsNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.obstaclesNumber)).BeginInit();
             this.SuspendLayout();
             // 
@@ -101,6 +101,19 @@
             this.robotsBox.TabIndex = 99;
             this.robotsBox.TabStop = false;
             this.robotsBox.Text = "Robots";
+            // 
+            // robotsNumber
+            // 
+            this.robotsNumber.Location = new System.Drawing.Point(6, 342);
+            this.robotsNumber.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.robotsNumber.Name = "robotsNumber";
+            this.robotsNumber.Size = new System.Drawing.Size(185, 26);
+            this.robotsNumber.TabIndex = 108;
+            this.robotsNumber.ValueChanged += new System.EventHandler(this.robotsNumber_ValueChanged);
             // 
             // RobotsTable
             // 
@@ -150,6 +163,19 @@
             this.goalsBox.TabIndex = 100;
             this.goalsBox.TabStop = false;
             this.goalsBox.Text = "Goals";
+            // 
+            // goalsNumber
+            // 
+            this.goalsNumber.Location = new System.Drawing.Point(6, 342);
+            this.goalsNumber.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.goalsNumber.Name = "goalsNumber";
+            this.goalsNumber.Size = new System.Drawing.Size(124, 26);
+            this.goalsNumber.TabIndex = 109;
+            this.goalsNumber.ValueChanged += new System.EventHandler(this.goalsNumber_ValueChanged);
             // 
             // GoalsTable
             // 
@@ -207,7 +233,7 @@
             this.stopSim.TabIndex = 107;
             this.stopSim.Text = "stop";
             this.stopSim.UseVisualStyleBackColor = true;
-            this.stopSim.Click += new System.EventHandler(this.stopSim_Click);
+            this.stopSim.Click += new System.EventHandler(this.StopSimClick);
             // 
             // set_Scene
             // 
@@ -236,12 +262,12 @@
             this.obstaclesTable.Size = new System.Drawing.Size(176, 300);
             this.obstaclesTable.TabIndex = 104;
             // 
-            // R
+            // dataGridViewTextBoxColumn3
             // 
-            this.R.HeaderText = "R";
-            this.R.MinimumWidth = 40;
-            this.R.Name = "R";
-            this.R.Width = 40;
+            this.dataGridViewTextBoxColumn3.HeaderText = "X";
+            this.dataGridViewTextBoxColumn3.MinimumWidth = 40;
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.Width = 40;
             // 
             // dataGridViewTextBoxColumn4
             // 
@@ -250,12 +276,12 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.Width = 40;
             // 
-            // dataGridViewTextBoxColumn3
+            // R
             // 
-            this.dataGridViewTextBoxColumn3.HeaderText = "X";
-            this.dataGridViewTextBoxColumn3.MinimumWidth = 40;
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.Width = 40;
+            this.R.HeaderText = "R";
+            this.R.MinimumWidth = 40;
+            this.R.Name = "R";
+            this.R.Width = 40;
             // 
             // obstaclesBox
             // 
@@ -267,32 +293,6 @@
             this.obstaclesBox.TabIndex = 105;
             this.obstaclesBox.TabStop = false;
             this.obstaclesBox.Text = "Obstacles";
-            // 
-            // robotsNumber
-            // 
-            this.robotsNumber.Location = new System.Drawing.Point(6, 342);
-            this.robotsNumber.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.robotsNumber.Name = "robotsNumber";
-            this.robotsNumber.Size = new System.Drawing.Size(185, 26);
-            this.robotsNumber.TabIndex = 108;
-            this.robotsNumber.ValueChanged += new System.EventHandler(this.robotsNumber_ValueChanged);
-            // 
-            // goalsNumber
-            // 
-            this.goalsNumber.Location = new System.Drawing.Point(6, 342);
-            this.goalsNumber.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.goalsNumber.Name = "goalsNumber";
-            this.goalsNumber.Size = new System.Drawing.Size(124, 26);
-            this.goalsNumber.TabIndex = 109;
-            this.goalsNumber.ValueChanged += new System.EventHandler(this.goalsNumber_ValueChanged);
             // 
             // obstaclesNumber
             // 
@@ -324,13 +324,13 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pb)).EndInit();
             this.robotsBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.robotsNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RobotsTable)).EndInit();
             this.goalsBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.goalsNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.GoalsTable)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.obstaclesTable)).EndInit();
             this.obstaclesBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.robotsNumber)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.goalsNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.obstaclesNumber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

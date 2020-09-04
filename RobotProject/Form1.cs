@@ -23,12 +23,16 @@ namespace RobotProject
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            robotsNumber.Maximum = MaxRobotNumber;
+            goalsNumber.Maximum = MaxRobotNumber;
+
             pb.Image = new Bitmap(pb.Width, pb.Height);
             g = Graphics.FromImage(pb.Image);
 
             world = new World(ref static_map, logTextBox);
             init_scene();
             world.PriorityPoint = new PointF(pb.Width / 2, pb.Height / 2);
+            setScene();
             update_picture();
         }
 
@@ -60,10 +64,6 @@ namespace RobotProject
             obstaclesTable.Rows[1].Cells[0].Value = 350;
             obstaclesTable.Rows[1].Cells[1].Value = 150;
             obstaclesTable.Rows[1].Cells[2].Value = 15;
-
-            set_robots_();
-            set_obstacles_();
-            set_goals_();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -95,7 +95,7 @@ namespace RobotProject
             update_picture();
         }
         
-        private void set_robots_()
+        private void SetRobots()
         {
             int robot_id = 0;
             List<Robot> robots = new List<Robot>();
@@ -130,11 +130,11 @@ namespace RobotProject
                 robot_id++;
             }
 
-            world.set_robots(robots);
+            world.SetRobots(robots);
             update_picture();
         }
 
-        private void set_goals_()
+        private void SetGoals()
         {
             int goal_id = 0;
             List<Goal> goalPoints = new List<Goal>();
@@ -167,7 +167,7 @@ namespace RobotProject
                 Goal goal = new Goal();
                 goal.X = coords[0];
                 goal.Y = coords[1];
-                goal.id = goal_id;
+                goal.Id = goal_id;
                 goal.status = "not_ansigned";
                 goalPoints.Add(goal);
                 goal_id++;
@@ -177,7 +177,7 @@ namespace RobotProject
             update_picture();
         }
 
-        private void set_obstacles_()
+        private void SetObstacles()
         {
             List<Obstacle> obstacles = new List<Obstacle>();
             List<int> remove_rows_with_id = new List<int>();
@@ -212,21 +212,16 @@ namespace RobotProject
             update_picture();
         }
 
-        private void stopSim_Click(object sender, EventArgs e)
+        private void setScene()
         {
-            set_obstacles_();
-            set_robots_();
-            set_goals_();
-            logTextBox.Text = "";
-            world.PriorityPoint = world.PriorityPoint;
-            timer1.Enabled = false;
+            SetObstacles();
+            SetRobots();
+            SetGoals();
         }
 
         private void setSceneClick(object sender, EventArgs e)
         {
-            set_obstacles_();
-            set_robots_();
-            set_goals_();
+            setScene();
         }
 
         private void obstaclesNumber_ValueChanged(object sender, EventArgs e)
@@ -254,6 +249,14 @@ namespace RobotProject
 
             while (RobotsTable.Rows.Count > robotsNumber.Value)
                 RobotsTable.Rows.RemoveAt(RobotsTable.Rows.Count - 1);
+        }
+
+        private void StopSimClick(object sender, EventArgs e)
+        {
+            setScene();
+            logTextBox.Text = "";
+            world.PriorityPoint = world.PriorityPoint;
+            timer1.Enabled = false;
         }
     }
 }
